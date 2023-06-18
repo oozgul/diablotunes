@@ -24,4 +24,4 @@ Note: If you don't want to use the executable you need to download all dependenc
 **Known Issues/FAQ**
 - If you start the application while you are in a dungeon the playback will only start when it recognizes an open world zone name or town name.
 - Occassionally image to text logic would fail if there is too much background noise where your zone name is located. Try moving your character and eventually it will recognize the correct zone name.
-- If it does now work still, create an issue in this repository.
+- If it does not work still, create an issue in this repository.
