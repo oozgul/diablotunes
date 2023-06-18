@@ -150,13 +150,12 @@ for act, zones in act_to_zones.items():
 
 # actNames with youtube Urls
 act_to_url = {
-    'Dry Steppes': deque(random.sample(['https://www.youtube.com/watch?v=E2BBkgqU4LI', 'https://www.youtube.com/watch?v=h_CNmc7VZek', 'https://www.youtube.com/watch?v=LeX07fdBvCg', 'https://www.youtube.com/watch?v=sXhauazts10', 'https://www.youtube.com/watch?v=tXkw_0vR-k4','https://www.youtube.com/watch?v=cqVQtXmp0jY','https://www.youtube.com/watch?v=51Fp4XxT02s'], 7)),
-    'Hawezar': deque(random.sample(['https://www.youtube.com/watch?v=CSM5_muJPUo', 'https://www.youtube.com/watch?v=N2uPl_IBPV8', 'https://www.youtube.com/watch?v=WgblauBtNcc'], 3)),
-    'Fractured Peaks': deque(random.sample(['https://www.youtube.com/watch?v=tn2fgpaLcSU', 'https://www.youtube.com/watch?v=u70J2h3-oyA', 'https://www.youtube.com/watch?v=nlL1WalJhIg', 'https://www.youtube.com/watch?v=-Kpxi_SEIxQ'], 4)),
-    'Scosglen': deque(random.sample(['https://www.youtube.com/watch?v=F1d4fN4A39M', 'https://www.youtube.com/watch?v=o4ZWBduA9OI','https://www.youtube.com/watch?v=OPviH4BNzJ4','https://www.youtube.com/watch?v=6I0_mEo3ptY', 'https://www.youtube.com/watch?v=dOTBudfi-KY'], 5)),
-    'Kehjistan': deque(random.sample(['https://www.youtube.com/watch?v=E2BBkgqU4LI', 'https://www.youtube.com/watch?v=h_CNmc7VZek', 'https://www.youtube.com/watch?v=LeX07fdBvCg', 'https://www.youtube.com/watch?v=sXhauazts10', 'https://www.youtube.com/watch?v=tXkw_0vR-k4','https://www.youtube.com/watch?v=cqVQtXmp0jY','https://www.youtube.com/watch?v=51Fp4XxT02s'], 7)),
+    'Dry Steppes': ['https://www.youtube.com/watch?v=E2BBkgqU4LI', 'https://www.youtube.com/watch?v=h_CNmc7VZek', 'https://www.youtube.com/watch?v=LeX07fdBvCg', 'https://www.youtube.com/watch?v=sXhauazts10', 'https://www.youtube.com/watch?v=tXkw_0vR-k4', 'https://www.youtube.com/watch?v=cqVQtXmp0jY', 'https://www.youtube.com/watch?v=51Fp4XxT02s'],
+    'Hawezar': ['https://www.youtube.com/watch?v=CSM5_muJPUo', 'https://www.youtube.com/watch?v=N2uPl_IBPV8', 'https://www.youtube.com/watch?v=WgblauBtNcc'],
+    'Fractured Peaks': ['https://www.youtube.com/watch?v=tn2fgpaLcSU', 'https://www.youtube.com/watch?v=u70J2h3-oyA', 'https://www.youtube.com/watch?v=nlL1WalJhIg', 'https://www.youtube.com/watch?v=-Kpxi_SEIxQ'],
+    'Scosglen': ['https://www.youtube.com/watch?v=F1d4fN4A39M', 'https://www.youtube.com/watch?v=o4ZWBduA9OI', 'https://www.youtube.com/watch?v=OPviH4BNzJ4', 'https://www.youtube.com/watch?v=6I0_mEo3ptY', 'https://www.youtube.com/watch?v=dOTBudfi-KY'],
+    'Kehjistan': ['https://www.youtube.com/watch?v=E2BBkgqU4LI', 'https://www.youtube.com/watch?v=h_CNmc7VZek', 'https://www.youtube.com/watch?v=LeX07fdBvCg', 'https://www.youtube.com/watch?v=sXhauazts10', 'https://www.youtube.com/watch?v=tXkw_0vR-k4', 'https://www.youtube.com/watch?v=cqVQtXmp0jY', 'https://www.youtube.com/watch?v=51Fp4XxT02s']
 }
-
 
 #zoneNames (only towns) with youtube Urls
 song_associations = {
@@ -248,8 +247,8 @@ def getVideoUrlForZone():
     else:
         act = currentZone  # Use currentZone as act for non-town zones
         if act and act in act_to_url and len(act_to_url[act]) > 0:
-            video_url = act_to_url[act].popleft()  # Get the next URL from the deque
-            act_to_url[act].append(video_url)  # Append the URL back to the deque
+            video_url = act_to_url[act][0]  # Get the next URL from the list
+            random.shuffle(act_to_url[act])  # Shuffle the URLs within the list
             current_video_url = video_url  # Update the current video URL
             print(f"Playing URL for act {act}: {current_video_url}")
             return video_url
@@ -330,11 +329,14 @@ def capture_screen_region():
 def get_next_song_in_playlist():
     if currentZone not in song_associations:  # If it's not a town
         act = currentZone  # Use currentZone as act for non-town zones
-        if act and act_to_url.get(act, []):
-            # Pop song from the front of the queue
-            video_url = act_to_url[act].popleft()
-            # Put it at the end of the queue
-            act_to_url[act].append(video_url)
+        if act and act_to_url.get(act):
+            # Check if the playlist for the act is empty
+            if not act_to_url[act]:
+                # Shuffle the songs in the playlist
+                random.shuffle(act_to_url[act])
+
+            # Pop the next song from the playlist
+            video_url = act_to_url[act].pop(0)
 
             print(f"Playing next song for act {act}: {video_url}")
             return video_url
