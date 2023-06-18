@@ -5,7 +5,7 @@ a zone-aware python app that plays diablo 2 music while running diablo 4
 
 **Instructions**
 - Download the latest .zip file - https://github.com/oozgul/diablotunes/releases/download/executable/diablotunes_v05.zip
-- Launch main.exe under dist/main folder 
+- Launch main.exe 
 - Launch the game
 - As soon as the zone names are visible on your screen the playback should start
 
