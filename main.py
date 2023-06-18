@@ -92,6 +92,7 @@ def run_gui(message_queue):
     def check_queue():
         while not message_queue.empty():
             message, message_type = message_queue.get()
+            print(f"Message received: {message}, Message type: {message_type}") 
             if message_type == 'act_zone_change':
                 # Extract zone
                 zone = message.split(" (")[0]
@@ -118,8 +119,16 @@ def run_gui(message_queue):
 
                 # Handle act and zone change here
                 text_area.insert(tk.END, f"{time_str} Act: {act}, Zone: {zone}\n")
-
+            elif message_type == 'song_started':
+                print("Song started event received")  # Debugging line
+                # Get the current time
+                time_str = datetime.now().strftime("[%H:%M]")
+                # Add the URL of the song to the log
+                print_log(f"{time_str} Song URL: {message}", message_type)
+                text_area.insert(tk.END, f"{time_str} {message}\n")
+                root.update()  # Force GUI to update
         root.after_id = root.after(100, check_queue)  # Save the id of the scheduled task
+        
 
     check_queue()
 
@@ -142,7 +151,7 @@ for act, zones in act_to_zones.items():
 # actNames with youtube Urls
 act_to_url = {
     'Dry Steppes': deque(random.sample(['https://www.youtube.com/watch?v=E2BBkgqU4LI', 'https://www.youtube.com/watch?v=h_CNmc7VZek', 'https://www.youtube.com/watch?v=LeX07fdBvCg', 'https://www.youtube.com/watch?v=sXhauazts10', 'https://www.youtube.com/watch?v=tXkw_0vR-k4','https://www.youtube.com/watch?v=cqVQtXmp0jY','https://www.youtube.com/watch?v=51Fp4XxT02s'], 7)),
-    'Hawezar': deque(random.sample(['https://www.youtube.com/watch?v=gXtKzCuBiGg', 'https://www.youtube.com/watch?v=CSM5_muJPUo', 'https://www.youtube.com/watch?v=N2uPl_IBPV8', 'https://www.youtube.com/watch?v=WgblauBtNcc'], 4)),
+    'Hawezar': deque(random.sample(['https://www.youtube.com/watch?v=CSM5_muJPUo', 'https://www.youtube.com/watch?v=N2uPl_IBPV8', 'https://www.youtube.com/watch?v=WgblauBtNcc'], 3)),
     'Fractured Peaks': deque(random.sample(['https://www.youtube.com/watch?v=tn2fgpaLcSU', 'https://www.youtube.com/watch?v=u70J2h3-oyA', 'https://www.youtube.com/watch?v=nlL1WalJhIg', 'https://www.youtube.com/watch?v=-Kpxi_SEIxQ'], 4)),
     'Scosglen': deque(random.sample(['https://www.youtube.com/watch?v=F1d4fN4A39M', 'https://www.youtube.com/watch?v=o4ZWBduA9OI','https://www.youtube.com/watch?v=OPviH4BNzJ4','https://www.youtube.com/watch?v=6I0_mEo3ptY', 'https://www.youtube.com/watch?v=dOTBudfi-KY'], 5)),
     'Kehjistan': deque(random.sample(['https://www.youtube.com/watch?v=E2BBkgqU4LI', 'https://www.youtube.com/watch?v=h_CNmc7VZek', 'https://www.youtube.com/watch?v=LeX07fdBvCg', 'https://www.youtube.com/watch?v=sXhauazts10', 'https://www.youtube.com/watch?v=tXkw_0vR-k4','https://www.youtube.com/watch?v=cqVQtXmp0jY','https://www.youtube.com/watch?v=51Fp4XxT02s'], 7)),
@@ -267,8 +276,11 @@ def play_youtube_video(video_url):
     player.audio_set_volume(0)
     player.play()
     time.sleep(0.1)  # Add a small delay here
-    
+
     threading.Thread(target=fade_in).start()
+
+    # Add a message to the queue to print the URL to the log in the GUI thread
+    message_queue.put((f"Playing URL: {video_url}", 'song_started'))
 
     start_time = time.time()
     duration = getSongDurationForZone()  
