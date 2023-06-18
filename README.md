@@ -13,7 +13,7 @@ Note: If you don't want to use the executable you need to download all dependenc
 
 **Features**
 - Application automatically recognizes your zone name in D4 and plays a track from d2 automatically.
-- Application chooses a song based on your current song, for example while in Kyovashad the application will play Harrogath music (Act 5 town in D2) as it's the geographical twin in D4. Same as applied for other acts as well.
+- Application chooses a song based on your current zone, for example while in Kyovashad the application will play Harrogath music (Act 5 town in D2) as it's the geographical twin in D4. Same as applied for other acts as well.
 - GUI window to show the current act/zone and current state of the player.
 
 **How does it work?**
