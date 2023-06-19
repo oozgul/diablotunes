@@ -1,6 +1,6 @@
 # DiabloTunes
 
-**DISCLAIMER: APPLICATION DOES NOT MESS OR READ ANY D4 FILES.**
+**DISCLAIMER: APPLICATION DOES NOT READ ANY D4 FILES.**
 
 a zone-aware python app that plays diablo 2 music while running diablo 4
 
